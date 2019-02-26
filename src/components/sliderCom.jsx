@@ -12,7 +12,16 @@ class SliderCom extends Component {
         super(props)
         this.state = {
             collapsed: false,
-            menuLists: []
+            menuLists: [
+                {
+                    name:'预约列表',
+                    url:'/'
+                },
+                {
+                    name:'经销商管理',
+                    url:'/distributor'
+                }
+            ]
         }
     }
     componentDidMount() {
@@ -20,13 +29,13 @@ class SliderCom extends Component {
     }
     //获取菜单
     getMenuData() {
-        getMenuLists().then(res => {
-            if (res.success) {
-                this.setState({
-                    menuLists: res.data
-                })
-            }
-        })
+        // getMenuLists().then(res => {
+        //     if (res.success) {
+        //         this.setState({
+        //             menuLists: res.data
+        //         })
+        //     }
+        // })
     }
     render() {
         const { menuLists } = this.state
@@ -40,9 +49,9 @@ class SliderCom extends Component {
                     {
                         menuLists.map((i, index) => (
                             <Menu.Item key={index}>
-                                <Link to={i.firstUrl}>
+                                <Link to={i.url}>
                                     <Icon type="pie-chart" />
-                                    <span>{i.firstMenu}</span>
+                                    <span>{i.name}</span>
                                 </Link>
                             </Menu.Item>
                         ))

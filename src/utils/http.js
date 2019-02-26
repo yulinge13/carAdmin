@@ -127,7 +127,7 @@ const httpLists = {
             return handleHttp(res)
         },
         //评论
-        async comments(data){
+        async comments(data) {
             const res = await httpPost({
                 url: '/comments',
                 data
@@ -135,13 +135,43 @@ const httpLists = {
             return handleHttp(res)
         },
         //获取商品详情
-        async getProductInfo(data){
+        async getProductInfo(data) {
             const res = await httpGet({
                 url: '/getProductInfo',
                 data
             })
             return handleHttp(res)
-        }
+        },
+
+
+
+
+
+
+        //获取省市级区
+        async getProductInfo(data) {
+            const res = await httpGet({
+                url: '/getArea',
+                data
+            })
+            return handleHttp(res)
+        },
+        //添加经销商
+        async addDistributor(data) {
+            const res = await httpPost({
+                url: '/addDistributor',
+                data
+            })
+            return handleHttp(res)
+        },
+        //添加经销商
+        async getAllDistributor(data) {
+            const res = await httpGet({
+                url: '/getAllDistributor',
+                data
+            })
+            return handleHttp(res)
+        },
     }
 }
 export default httpLists
