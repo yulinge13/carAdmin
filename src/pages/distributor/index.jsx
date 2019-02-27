@@ -39,41 +39,42 @@ class Distributor extends Component {
                 {
                     title: '经销商名称',
                     dataIndex: 'name',
-                    key: 'name',
+                    key: '1',
                 },
                 {
                     title: '营业状态',
                     dataIndex: 'state',
-                    key: 'state',
+                    key: '2',
                 },
                 {
                     title: '大区',
                     dataIndex: 'largeArea',
-                    key: 'largeArea',
+                    key: '3',
                 },
                 {
                     title: '省份',
-                    dataIndex: 'province',
-                    key: 'province',
+                    dataIndex: 'provinceName',
+                    key: '4',
                 },
                 {
                     title: '地级市',
-                    dataIndex: 'prefectureLevelCity',
-                    key: 'prefectureLevelCity',
+                    dataIndex: 'cityName',
+                    key: '5',
                 },
                 {
                     title: '展厅地址',
                     dataIndex: 'address',
-                    key: 'address',
+                    key: '6',
                 },
                 {
                     title: '展厅电话',
                     dataIndex: 'tel',
-                    key: 'tel',
+                    key: '7',
                 },
                 {
                     title: '操作',
                     dataIndex: 'opaction',
+                    key: '8',
                     render: (row, columns) => {
                         return (
                             <div>
@@ -172,6 +173,7 @@ class Distributor extends Component {
                 if (res.success) {
                     message.success("添加经销商成功");
                     this.initModalFromData()
+                    this.getAllDistributor()
                 }
             })
         } else {
@@ -198,9 +200,7 @@ class Distributor extends Component {
     }
     //关闭
     handleCancel() {
-        this.setState({
-            modalShow: false
-        })
+        this.initModalFromData()
     }
     //获取值
     getInputValue(type, val) {
@@ -234,7 +234,8 @@ class Distributor extends Component {
             provinceLists,
             cityLists,
             provinceValue,
-            cityValue
+            cityValue,
+            fromData
         } = this.state
         return (
             <div className="distributor">
@@ -265,6 +266,7 @@ class Distributor extends Component {
                                     <Input
                                         placeholder="经销商名称"
                                         onChange={e => this.getInputValue('name', e.target.value)}
+                                        value={fromData.name}
                                     />
                                 </div>
                             </div>
@@ -276,6 +278,7 @@ class Distributor extends Component {
                                     <Input
                                         placeholder="营业状态"
                                         onChange={e => this.getInputValue('state', e.target.value)}
+                                        value={fromData.state}
                                     />
                                 </div>
                             </div>
@@ -287,6 +290,7 @@ class Distributor extends Component {
                                     <Input
                                         placeholder="大区"
                                         onChange={e => this.getInputValue('largeArea', e.target.value)}
+                                        value={fromData.largeArea}
                                     />
                                 </div>
                             </div>
@@ -344,6 +348,7 @@ class Distributor extends Component {
                                     <Input
                                         placeholder="展厅地址"
                                         onChange={e => this.getInputValue('address', e.target.value)}
+                                        value={fromData.address}
                                     />
                                 </div>
                             </div>
@@ -355,6 +360,7 @@ class Distributor extends Component {
                                     <Input
                                         placeholder="展厅电话"
                                         onChange={e => this.getInputValue('tel', e.target.value)}
+                                        value={fromData.tel}
                                     />
                                 </div>
                             </div>
