@@ -10,12 +10,14 @@ import {
 import './index.less'
 import httpLists from '../../utils/http'
 import { connect } from 'react-redux'
+const confirm = Modal.confirm;
 const Option = Select.Option;
 let { containHttp } = httpLists
 const {
     getProductInfo,
     addDistributor,
-    getAllDistributor
+    getAllDistributor,
+    deleteDistributor
 } = containHttp
 @connect(
     state => {
@@ -78,8 +80,13 @@ class Distributor extends Component {
                     render: (row, columns) => {
                         return (
                             <div>
-                                <Button type="primary" shape="circle" icon="shopping" style={{ marginRight: '10px' }} />
-                                <Button type="primary" shape="circle" icon="shopping" style={{ marginRight: '10px' }} />
+                                <Button
+                                    type="danger"
+                                    shape="circle"
+                                    icon="delete"
+                                    style={{ marginRight: '10px' }}
+                                    onClick={this.deleteDistributor.bind(this, columns)}
+                                />
                             </div>
                         )
                     }
@@ -165,17 +172,21 @@ class Distributor extends Component {
         const { fromData, provinceValue, cityValue } = this.state
         if (this.isFillOk()) {
             console.log(fromData)
-            addDistributor({
-                ...fromData,
-                province: provinceValue,
-                prefectureLevelCity: cityValue
-            }).then(res => {
-                if (res.success) {
-                    message.success("添加经销商成功");
-                    this.initModalFromData()
-                    this.getAllDistributor()
-                }
-            })
+            if (/^1[34578]\d{9}$/.test(fromData.tel)) {
+                addDistributor({
+                    ...fromData,
+                    province: provinceValue,
+                    prefectureLevelCity: cityValue
+                }).then(res => {
+                    if (res.success) {
+                        message.success("添加经销商成功");
+                        this.initModalFromData()
+                        this.getAllDistributor()
+                    }
+                })
+            } else {
+                message.error('请输入正确的手机号');
+            }
         } else {
             message.error('请填写完整信息');
         }
@@ -224,6 +235,29 @@ class Distributor extends Component {
                     orderLists: res.data
                 })
             }
+        })
+    }
+    //删除经销商
+    deleteDistributor(row) {
+        const _this = this
+        confirm({
+            title: '确定要永久删除？',
+            content: '确定要永久删除？',
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk() {
+                deleteDistributor({
+                    id:row.id
+                }).then(res => {
+                    if(res.success){
+                        message.success("删除成功")
+                        _this.getAllDistributor()
+                    }
+                })
+            },
+            onCancel() {
+            },
         })
     }
     render() {

@@ -45,6 +45,7 @@ class SliderCom extends Component {
                     mode="inline"
                     theme="dark"
                     inlineCollapsed={this.state.collapsed}
+                    defaultSelectedKeys={['0']}
                 >
                     {
                         menuLists.map((i, index) => (

@@ -172,6 +172,22 @@ const httpLists = {
             })
             return handleHttp(res)
         },
+        //删除经销商
+        async deleteDistributor(data) {
+            const res = await httpPost({
+                url: '/deleteDistributor',
+                data
+            })
+            return handleHttp(res)
+        },
+        //获取预约列表
+        async getAllAppointment(data) {
+            const res = await httpGet({
+                url: '/getAllAppointment',
+                data
+            })
+            return handleHttp(res)
+        },
     }
 }
 export default httpLists

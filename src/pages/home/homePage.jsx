@@ -9,13 +9,9 @@ import {
 import './home.less'
 import httpLists from '../../utils/http'
 import { connect } from 'react-redux'
-const Option = Select.Option;
 let { containHttp } = httpLists
 const {
-    addOrder,
-    getOrderLists,
-    getAllProduct,
-    orderPay
+    getAllAppointment
 } = containHttp
 @connect(
     state => {
@@ -36,58 +32,35 @@ class HomePage extends Component {
             keyWord: '',
             columns: [
                 {
-                    title: '商品名称',
-                    dataIndex: 'productName',
-                    key: 'productName',
+                    title: '姓名',
+                    dataIndex: 'name',
+                    key: '1',
                 },
                 {
-                    title: '商品价格',
-                    dataIndex: 'price',
-                    key: 'price',
+                    title: '手机号',
+                    dataIndex: 'tel',
+                    key: '2',
                 },
                 {
-                    title: '商品图片',
-                    dataIndex: 'productPic',
-                    key: 'productPic',
-                    render: (row) => {
-                        return (
-                            row ? <img
-                                src={'http://localhost:7001' + row}
-                                alt="avatar"
-                                style={{
-                                    width: '50px',
-                                    height: '50px'
-                                }}
-                            /> : '暂无图片'
-                        )
-                    }
+                    title: '车型',
+                    dataIndex: 'carType',
+                    key: '3',
                 },
                 {
-                    title: '商品数量',
-                    dataIndex: 'productNum',
-                    key: 'productNum',
+                    title: '经销商',
+                    dataIndex: 'distributorName',
+                    key: '6',
                 },
                 {
-                    title: '操作',
-                    dataIndex: 'opaction',
-                    render: (row, columns) => {
-                        return columns.orderStatus < 2 ?
-                            (<div
-                                style={{
-                                    display: 'flex'
-                                }}
-                            >
-                                <Button type="primary" shape="circle" icon="shopping" style={{ marginRight: '10px' }} />
-                            </div>) : (<div
-                                style={{
-                                    display: 'flex'
-                                }}
-                            >
-                                <Button type="primary" shape="circle" icon="book" style={{ marginRight: '10px' }} />
-                            </div>)
-
-                    }
-                }
+                    title: '经销商所在省份',
+                    dataIndex: 'provinceName',
+                    key: '4',
+                },
+                {
+                    title: '经销商所在城市',
+                    dataIndex: 'cityName',
+                    key: '5',
+                },
             ],
             pageNum: 1,
             pageSize: 10,
@@ -96,6 +69,17 @@ class HomePage extends Component {
         }
     }
     componentDidMount() {
+        this.getAllAppointment()
+    }
+    //获取列表
+    getAllAppointment(){
+        getAllAppointment().then(res => {
+            if(res.success){
+                this.setState({
+                    orderLists:res.data
+                })
+            }
+        })
     }
     render() {
         const {
@@ -104,13 +88,13 @@ class HomePage extends Component {
         } = this.state
         return (
             <div className="home">
-                <div className="header example-input">
+                {/* <div className="header example-input">
                     <div className="btns_left">
                     </div>
                     <div className="btns_right">
                         <Button type="primary">添加</Button>
                     </div>
-                </div>
+                </div> */}
                 <Table dataSource={orderLists} columns={columns} />
             </div>
         );
