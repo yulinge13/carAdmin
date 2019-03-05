@@ -13,6 +13,17 @@ let { containHttp } = httpLists
 const {
     getAllAppointment
 } = containHttp
+function getTime(time) {
+    const date = new Date(time - 0)
+    const year = date.getFullYear()
+    const month = date.getMonth()+1
+    const day = date.getDate()
+    const h = date.getHours()
+    const m = date.getMinutes()
+    const s = date.getSeconds()
+    const str = `${year}年${month}月${day}日 ${h}:${m}:${s}`
+    return str
+}
 @connect(
     state => {
         return {
@@ -60,6 +71,18 @@ class HomePage extends Component {
                     title: '经销商所在城市',
                     dataIndex: 'cityName',
                     key: '5',
+                },
+                {
+                    title: '预约时间',
+                    dataIndex: 'creatTime',
+                    key: '7',
+                    render(row, columns){
+                        return(
+                            <div>
+                                {getTime(columns.creatTime)}
+                            </div>
+                        )
+                    }
                 },
             ],
             pageNum: 1,

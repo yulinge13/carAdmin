@@ -59,7 +59,7 @@ class Distributor extends Component {
                     key: '4',
                 },
                 {
-                    title: '地级市',
+                    title: '市',
                     dataIndex: 'cityName',
                     key: '5',
                 },
@@ -171,22 +171,17 @@ class Distributor extends Component {
     handleSumbit() {
         const { fromData, provinceValue, cityValue } = this.state
         if (this.isFillOk()) {
-            console.log(fromData)
-            if (/^1[34578]\d{9}$/.test(fromData.tel)) {
-                addDistributor({
-                    ...fromData,
-                    province: provinceValue,
-                    prefectureLevelCity: cityValue
-                }).then(res => {
-                    if (res.success) {
-                        message.success("添加经销商成功");
-                        this.initModalFromData()
-                        this.getAllDistributor()
-                    }
-                })
-            } else {
-                message.error('请输入正确的手机号');
-            }
+            addDistributor({
+                ...fromData,
+                province: provinceValue,
+                prefectureLevelCity: cityValue
+            }).then(res => {
+                if (res.success) {
+                    message.success("添加经销商成功");
+                    this.initModalFromData()
+                    this.getAllDistributor()
+                }
+            })
         } else {
             message.error('请填写完整信息');
         }
@@ -248,9 +243,9 @@ class Distributor extends Component {
             cancelText: '取消',
             onOk() {
                 deleteDistributor({
-                    id:row.id
+                    id: row.id
                 }).then(res => {
-                    if(res.success){
+                    if (res.success) {
                         message.success("删除成功")
                         _this.getAllDistributor()
                     }
