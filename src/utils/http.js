@@ -188,6 +188,14 @@ const httpLists = {
             })
             return handleHttp(res)
         },
+        //导出
+        async exprotData(data) {
+            const res = await httpGet({
+                url: '/exprotData',
+                data
+            })
+            return handleHttp(res)
+        },
     }
 }
 export default httpLists

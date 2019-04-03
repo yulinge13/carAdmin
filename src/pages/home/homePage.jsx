@@ -11,12 +11,13 @@ import httpLists from '../../utils/http'
 import { connect } from 'react-redux'
 let { containHttp } = httpLists
 const {
-    getAllAppointment
+    getAllAppointment,
+    exprotData
 } = containHttp
 function getTime(time) {
     const date = new Date(time - 0)
     const year = date.getFullYear()
-    const month = date.getMonth()+1
+    const month = date.getMonth() + 1
     const day = date.getDate()
     const h = date.getHours()
     const m = date.getMinutes()
@@ -76,8 +77,8 @@ class HomePage extends Component {
                     title: '预约时间',
                     dataIndex: 'creatTime',
                     key: '7',
-                    render(row, columns){
-                        return(
+                    render(row, columns) {
+                        return (
                             <div>
                                 {getTime(columns.creatTime)}
                             </div>
@@ -95,12 +96,25 @@ class HomePage extends Component {
         this.getAllAppointment()
     }
     //获取列表
-    getAllAppointment(){
+    getAllAppointment() {
         getAllAppointment().then(res => {
-            if(res.success){
+            if (res.success) {
                 this.setState({
-                    orderLists:res.data
+                    orderLists: res.data
                 })
+            }
+        })
+    }
+    exprotData(){
+        exprotData().then(res => {
+            if(res.success){
+                const a = document.createElement('a')
+                a.href = 'http://39.105.193.91:7001'+res.data
+                a.target = '_blank'
+                a.click()
+                a.remove()
+            }else{
+                message.error('导出失败')
             }
         })
     }
@@ -118,6 +132,9 @@ class HomePage extends Component {
                         <Button type="primary">添加</Button>
                     </div>
                 </div> */}
+                <div style={{ marginBottom: 20,display:'flex',justifyContent:'flex-end' }}>
+                    <Button type="primary" onClick={this.exprotData.bind(this)}>导出</Button>
+                </div>
                 <Table dataSource={orderLists} columns={columns} />
             </div>
         );
