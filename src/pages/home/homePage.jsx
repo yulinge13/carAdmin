@@ -4,15 +4,16 @@ import {
     Table,
     Select,
     message,
-    Form
 } from 'antd';
 import './home.less'
 import httpLists from '../../utils/http'
 import { connect } from 'react-redux'
+const Option = Select.Option;
 let { containHttp } = httpLists
 const {
     getAllAppointment,
-    exprotData
+    exprotData,
+    getFromLists
 } = containHttp
 function getTime(time) {
     const date = new Date(time - 0)
@@ -88,41 +89,95 @@ class HomePage extends Component {
             ],
             pageNum: 1,
             pageSize: 10,
+            total: null,
             modalShow: false,
             orderLists: [],//所有的订单
+            fromLists: [],//获取所有来源列表
+            fromValue: 1
         }
     }
     componentDidMount() {
         this.getAllAppointment()
+        this.getFromLists()
     }
     //获取列表
     getAllAppointment() {
-        getAllAppointment().then(res => {
+        const { fromValue, pageNum, pageSize } = this.state
+        getAllAppointment({
+            pageNum,
+            pageSize,
+            from: fromValue
+        }).then(res => {
             if (res.success) {
                 this.setState({
-                    orderLists: res.data
+                    orderLists: res.data.lists,
+                    total: res.data.total
                 })
             }
         })
     }
-    exprotData(){
-        exprotData().then(res => {
-            if(res.success){
+    //导出
+    exprotData() {
+        const { fromValue, pageNum, pageSize } = this.state
+        exprotData({
+            from:fromValue,
+            pageNum,
+            pageSize
+        }).then(res => {
+            if (res.success) {
                 const a = document.createElement('a')
-                a.href = 'http://39.105.193.91:7001'+res.data
+                a.href = 'http://39.105.193.91:7001' + res.data
                 a.target = '_blank'
                 a.click()
                 a.remove()
-            }else{
+            } else {
                 message.error('导出失败')
             }
+        })
+    }
+    //获取所有来源列表
+    getFromLists() {
+        getFromLists().then(res => {
+            if (res.success) {
+                this.setState({
+                    fromLists: res.data.map(i => {
+                        return { name: `Q${i.from}`, val: i.from }
+                    })
+                })
+            }
+        })
+    }
+    //选择来源列表
+    selectFrom(val) {
+        this.setState({
+            fromValue: val,
+            pageNum: 1
+        }, () => {
+            this.getAllAppointment()
         })
     }
     render() {
         const {
             columns,
             orderLists,
+            fromLists,
+            fromValue,
+            pageSize,
+            pageNum,
+            total
         } = this.state
+        const pagination = {
+            current: pageNum,
+            pageSize,
+            onChange: (pageNum) => {
+                this.setState({
+                    pageNum
+                }, () => {
+                    this.getAllAppointment()
+                })
+            },
+            total
+        }
         return (
             <div className="home">
                 {/* <div className="header example-input">
@@ -132,10 +187,26 @@ class HomePage extends Component {
                         <Button type="primary">添加</Button>
                     </div>
                 </div> */}
-                <div style={{ marginBottom: 20,display:'flex',justifyContent:'flex-end' }}>
+                <div style={{ marginBottom: 20, display: 'flex', justifyContent: 'space-between' }}>
+                    <Select defaultValue={fromValue} style={{ width: 160 }} onChange={this.selectFrom.bind(this)}>
+                        {
+                            fromLists.length > 0 && fromLists.map((i, index) => {
+                                return (
+                                    <Option value={i.val} key={index}>{i.name}</Option>
+                                )
+                            })
+                        }
+
+                    </Select>
                     <Button type="primary" onClick={this.exprotData.bind(this)}>导出</Button>
                 </div>
-                <Table dataSource={orderLists} columns={columns} />
+                <Table
+                    dataSource={orderLists}
+                    columns={columns}
+                    pagination={
+                        pagination
+                    }
+                />
             </div>
         );
     }

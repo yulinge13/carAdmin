@@ -196,6 +196,14 @@ const httpLists = {
             })
             return handleHttp(res)
         },
+        //获取所有来源列表
+        async getFromLists(data) {
+            const res = await httpGet({
+                url: '/getFromLists',
+                data
+            })
+            return handleHttp(res)
+        },
     }
 }
 export default httpLists
